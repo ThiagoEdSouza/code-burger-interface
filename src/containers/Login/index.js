@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import Button from '../../components/Button'
+import { Button } from '../../components';
 import LoginImg from '../../assets/image-sign-in.svg'
 import Logo from '../../assets/logo-login.svg'
 import { useUser } from '../../hooks/UserContext';
@@ -21,7 +21,7 @@ import {
   SignUpLink
 } from './styles'
 
-function Login() {
+export function Login() {
   const history = useHistory()
   const { putUserData, userData } = useUser()
 
@@ -105,4 +105,3 @@ function Login() {
   )
 }
 
-export default Login

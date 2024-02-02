@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from 'yup'
 
-import Button from '../../components/Button'
+import { Button } from '../../components'
 import RegisterImg from '../../assets/image-sign-up.svg'
 import Logo from '../../assets/logo-login.svg'
 import api from '../../services/api'
@@ -20,7 +20,7 @@ import {
   SignInLink
 } from './styles'
 
-function Register() {
+export function Register() {
   const schema = Yup.object().shape({
     name: Yup.string()
       .required('* O campo de nome é obrigatório.'),
@@ -120,4 +120,3 @@ function Register() {
   )
 }
 
-export default Register
