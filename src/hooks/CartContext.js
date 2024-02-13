@@ -7,6 +7,13 @@ const CartContext = createContext({}) //Atribuímos o createContext da aplicaç�
 export const CartProvider = ({ children }) => { //Variável na qual atribuímos os dados. Precisamos indicar os props.
     const [cartProducts, setCartProducts] = useState([]) // Dados de produtos em forma de array.
 
+    const updateLocalStorage = async (products) => {
+        await localStorage.setItem(
+            'codeburger:cartInfo', 
+            JSON.stringify(products)
+            ) //Adiciona o produto novo ao local storage.
+    }
+
     const putProductInCart = async product => { //Criada função para guardar novos dados de produtos dentro do carrinho.
         const cartIndex = cartProducts.findIndex( prd => prd.id === product.id ) //Lógica para verificar se encontra algum produto já adicionado no carrinho.
 
@@ -26,10 +33,50 @@ export const CartProvider = ({ children }) => { //Variável na qual atribuímos 
             setCartProducts(newCartProducts)
         }
 
+        await updateLocalStorage(newCartProducts) //Adiciona o produto novo ao local storage.
+    }
+
+    const deleteProducts = async productId => { // Função para deletar um produto do nosso carrinho
+        const newCart = cartProducts.filter(product => product.id !== productId) // Fazemos um filtro e retornamos somente o que for diferente do productId (produto deletado) informado.
+
+        setCartProducts(newCart) //Atualizamos as informações do nosso carrinho.
+
+            await updateLocalStorage(newCart) //Atualizamos o local storage com a remoção do produto deletado.
+    }
+
+    const increaseProducts = async productId => { //Função para adicionar a quantidade de item no carrinho.
+        const newCart = cartProducts.map( product => { //variável que busca os itens do carrinho
+            return product.id === productId ? {...product, quantity: product.quantity + 1} // Ao encontrar o produto buscado, mantemos o produto, porém alteramos a quantidade.
+            : product // Se não encontrar o id do produto desejado, não faz qualquer alteração.
+        })
+
+        setCartProducts(newCart) //Atualizamos as informações do nosso carrinho.
+
+            await updateLocalStorage(newCart) //Adiciona a nova quantidade do produto ao local storage.
+
         await localStorage.setItem(
             'codeburger:cartInfo', 
-            JSON.stringify(newCartProducts)
-            ) //Adiciona o produto novo ao local storage.
+            JSON.stringify(newCart)
+            ) //Adiciona a nova quantidade do produto ao local storage.
+    }
+
+    const decreaseProducts = async productId => { //Função para subtrair a quantidade de item no carrinho.
+        const cartIndex = cartProducts.findIndex( pd => pd.id === productId) // Fazemos uma varredura e assim que o id do produto é encontrado lança na variável cartIndex.
+        
+        if(cartProducts[cartIndex].quantity > 1){ //Criada a condição caso a quantidade do produto seja maior do que 1.
+
+            const newCart = cartProducts.map( product => { //variável que busca os itens do carrinho
+                return product.id === productId ? {...product, quantity: product.quantity - 1} // Ao encontrar o produto buscado, mantemos o produto, porém alteramos a quantidade.
+                : product // Se não encontrar o id do produto desejado, não faz qualquer alteração.
+            })
+
+            setCartProducts(newCart) //Atualizamos as informações do nosso carrinho.
+
+            await updateLocalStorage(newCart) //Adiciona a nova quantidade do produto ao local storage.
+        } else {
+            deleteProducts(productId)
+        }
+       
     }
 
     useEffect(() =>{
@@ -46,7 +93,8 @@ export const CartProvider = ({ children }) => { //Variável na qual atribuímos 
     }, []) // Lógica responsável por salvar os dados do carrinho no local storage.
 
     return ( //No Provider precisamos de um return.
-        <CartContext.Provider value={{ putProductInCart, cartProducts }}>
+        <CartContext.Provider 
+            value={{ putProductInCart, cartProducts, increaseProducts, decreaseProducts }}>
             {children}
         </CartContext.Provider> // Return é feito em forma de props, pegando o children.
     )
