@@ -20,7 +20,7 @@ export function CartResume() {
         }, 0) // Valor inicial zerado
 
         setFinalPrice(sumAllItems) //Preço Final definido pela soma realizada anteriormente.
-    }, [cartProducts]) // Baseado nos produtos do carrinho.
+    }, [cartProducts, deliveryTax]) // Baseado nos produtos do carrinho.
 
     const submitOrder = async () => {
         const order = cartProducts.map(product => {
@@ -53,9 +53,8 @@ export function CartResume() {
                     <p className='total-price'>{formatCurrency(finalPrice + deliveryTax)}</p>
                 </div>
             </Container>
-            <Button style={{ width: '100%' , marginTop: 30 }}
-            onclick={submitOrder}
-            >Finalizar Pedido
+            <Button style={{ width: '100%' , marginTop: 30 }} onClick={submitOrder}>
+                Finalizar Pedido
             </Button>
         </div>
     )
