@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 export const Container = styled.div`
     background-color: #E7E7E7;
@@ -11,7 +12,7 @@ export const Container = styled.div`
     .rec.rec-arrow{ //botão de rolagem carrossel
         background-color: #9758A6;
         color: #E7E7E7;
-        filter: drop-shadow: (0px 4px 4px rgba(0, 0, 0, 0.25));
+        box-shadow: (0px 4px 4px rgba(0, 0, 0, 0.25));
         border: none;
     }
 
@@ -41,7 +42,7 @@ export const Image = styled.img`
     border-radius: 10px;
 `
 
-export const Button = styled.button`
+export const Button = styled(Link)`
     margin-top: 16px;
     background: #9758A6;
     border-radius: 8px;
@@ -65,4 +66,9 @@ export const Button = styled.button`
     &:active{
         opacity: 0.6;
     }
+
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `

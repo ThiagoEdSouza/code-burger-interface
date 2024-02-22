@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
+import PropTypes from 'prop-types'
+
 import ProductsLogo from '../../assets/products-logo.svg'
 import { CardProduct } from '../../components'
 import api from '../../services/api'
@@ -12,11 +14,16 @@ import {
     ProductsContainer
 } from './styles'
 
-export function Products() {
+export function Products({ location: { state } }) { // Indicamos de onde vamos buscar as informações do categoryId que vamos indicar para direcionar nosso botões.
+    let categoryId = 0 //atribuímos um valor inicial  de categoryId
+    if (state?.categoryId) { //Verificamos o state do location e aplicamos o ELVIS OPERATOR
+        categoryId = state.categoryId //Definimos o valor coletado.
+    }
+
     const [categories, setCategories] = useState([])
     const [products, setProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
-    const [activeCategory, setActiveCategory] = useState(0)
+    const [activeCategory, setActiveCategory] = useState(categoryId)
 
     useEffect(() => {
         async function loadCategories() {
@@ -80,4 +87,8 @@ export function Products() {
             </ProductsContainer>
         </Container>
     )
+}
+
+Products.propTypes = {
+    location: PropTypes.object
 }

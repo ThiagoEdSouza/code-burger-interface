@@ -13,6 +13,10 @@ export const UserProvider = ({ children }) => { //Variável na qual atribuímos 
         await localStorage.setItem('codeburger:userData', JSON.stringify(userInfo))
     }
 
+    const logout = async () => { //Vazia pois não queremos enviar nenhu parâmetro.
+        await localStorage.removeItem('codeburger:userData') //Indicamos o quê queremos remover.
+    }
+
     useEffect(() =>{
 
         const loadUserData = async () => {
@@ -27,7 +31,7 @@ export const UserProvider = ({ children }) => { //Variável na qual atribuímos 
     }, [])
 
     return ( //No Provider precisamos de um return.
-        <UserContext.Provider value={{ putUserData, userData }}>
+        <UserContext.Provider value={{ putUserData, userData, logout }}>
             {children}
         </UserContext.Provider> // Return é feito em forma de props, pegando o children.
     )
