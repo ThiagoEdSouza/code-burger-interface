@@ -61,7 +61,11 @@ export function Login() {
     putUserData(data)
 
     setTimeout(() =>{
-      history.push('/')
+      if(data.admin){
+        history.push('/pedidos') // Caso o usuário seja adm, será direcionado para a página de pedidos
+      } else {
+        history.push('/') // Caso não seja adm, será direcionado para a tela home.
+      }      
     }, 1000);
 
   } 
