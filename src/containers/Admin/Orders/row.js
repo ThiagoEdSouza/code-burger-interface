@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactSelect from 'react-select'
 
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -16,16 +15,21 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import status from './order-status'
 import api from '../../../services/api'
-import { ProductsImg } from './styles'
+import { ProductsImg, ReactSelectStyle } from './styles'
 
-function Row({ row }) {
+function Row({ row, setOrders, orders }) {
     const [open, setOpen] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(false)
 
     async function setNewStatus(id, status) {
       setIsLoading(true)
       try{
-        await api.put(`orders/${id}`, { status })
+        await api.put(`orders/${id}`, { status }) //Verifica se na chamada a api está tudo ok
+
+        const newOrders = orders.map( order => { // Caso esteja ok na chamada itera order por order e verifica qual precisa ser alterada.
+          return order._id === id ? { ...order, status} : order // Quando encontramos o id desejado, mantemos o objeto mas atualizamos o status.
+        })
+        setOrders(newOrders)
       } catch(err){
         console.error(err)
       } finally {
@@ -52,8 +56,8 @@ function Row({ row }) {
             <TableCell>{row.name}</TableCell>
             <TableCell>{row.date}</TableCell>
             <TableCell>
-              <ReactSelect 
-              options={status} // Importamos de onde queremos buscar as opções
+              <ReactSelectStyle 
+              options={status.filter(sts => sts.value !== 'Todos')} // Importamos de onde queremos buscar as opções
               menuPortalTarget={document.body} // Permitimos que o select se sobreponha sobre as demilitações da tabela.
               placeholder='Situação do Pedido' // Determinamos o label do select.
               defaultValue={
@@ -108,6 +112,8 @@ function Row({ row }) {
     }
     
     Row.propTypes = {
+      orders: PropTypes.array,
+      setOrders: PropTypes.func,
       row: PropTypes.shape({
         name: PropTypes.string.isRequired,
         orderId: PropTypes.string.isRequired,
