@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Carousel from 'react-elastic-carousel'
 
+import paths from '../../constants/paths'
 import Offers from '../../assets/offers.png'
 import api from '../../services/api'
 import formatCurrency from '../../utils/formatCurrency'
@@ -54,7 +55,7 @@ export function OffersCarousel() {
                             <p>{product.formatedPrice}</p>
                             <Button onClick={() => { 
                                 putProductInCart(product)
-                                push('/carrinho')
+                                push(paths.Cart)
                             }}
                             >
                                 Aproveitar

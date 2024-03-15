@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from 'yup'
 
+import paths from '../../constants/paths'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { Button } from '../../components';
@@ -62,9 +63,9 @@ export function Login() {
 
     setTimeout(() =>{
       if(data.admin){
-        history.push('/pedidos') // Caso o usuário seja adm, será direcionado para a página de pedidos
+        history.push(paths.Orders) // Caso o usuário seja adm, será direcionado para a página de pedidos
       } else {
-        history.push('/') // Caso não seja adm, será direcionado para a tela home.
+        history.push(paths.Home) // Caso não seja adm, será direcionado para a tela home.
       }      
     }, 1000);
 
