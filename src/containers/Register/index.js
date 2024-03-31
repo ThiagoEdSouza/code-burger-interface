@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as Yup from 'yup'
 
-import { Button } from '../../components'
+import { Button, ErrorMessage } from '../../components'
 import RegisterImg from '../../assets/image-sign-up.svg'
 import Logo from '../../assets/logo-login.svg'
 import api from '../../services/api'
@@ -16,7 +16,6 @@ import {
   ContainerItens,
   Label,
   Input,
-  ErrorMessage,
   SignInLink
 } from './styles'
 

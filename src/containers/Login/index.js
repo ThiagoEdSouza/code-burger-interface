@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 import paths from '../../constants/paths'
 import { Link, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { Button } from '../../components';
+import { Button, ErrorMessage } from '../../components';
 import LoginImg from '../../assets/image-sign-in.svg'
 import Logo from '../../assets/logo-login.svg'
 import { useUser } from '../../hooks/UserContext';
@@ -18,7 +18,6 @@ import {
   ContainerItens,
   Label,
   Input,
-  ErrorMessage,
   SignUpLink
 } from './styles'
 

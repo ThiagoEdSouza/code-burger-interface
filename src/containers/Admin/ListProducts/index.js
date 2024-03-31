@@ -12,9 +12,11 @@ import Paper from '@mui/material/Paper';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import formatCurrency from '../../../utils/formatCurrency';
+import { useHistory } from 'react-router-dom';
 
 function ListProducts() {
     const [products, setProducts] = useState()
+    const { push } = useHistory()
     useEffect(() => {
         async function loadOrders() { //Função que carrega os pedidos
             const { data } = await api.get('products')
@@ -30,6 +32,11 @@ function ListProducts() {
            return <CheckIcon style={{color: 'chartreuse'}}/>
         } 
            return <ClearIcon style={{color: 'red'}}/>
+    }
+
+    function editProduct(product) {
+        
+        push('/editar-produto', { product }) //Push enviando o caminho e os dados do produto
     }
     
     return (
@@ -61,7 +68,7 @@ function ListProducts() {
                         <ProductImage src={product.url} alt='imagem-do-produto' />
                     </TableCell>
                     <TableCell align='center'>
-                        <EditIconStyles />
+                        <EditIconStyles onClick={() => editProduct(product)}/>
                     </TableCell>
                     </TableRow>
                 ))}

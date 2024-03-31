@@ -1,7 +1,15 @@
 import React , {useEffect, useState} from 'react'
 
 import { useForm, Controller } from 'react-hook-form'
-import { Container, Label, Input, ButtonStyles, LabelUpload } from './styles'
+import { 
+    Container, 
+    Label, 
+    Input, 
+    ButtonStyles, 
+    LabelUpload, 
+    ContainerInput 
+} from './styles'
+
 import api from '../../../services/api'
 import ReactSelect from 'react-select'
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -11,38 +19,21 @@ import { ErrorMessage } from '../../../components'
 import { toast } from 'react-toastify'
 import { useHistory } from 'react-router-dom'
 
-function EditProduct() {
+function NewProduct() {
     const [fileName, setFileName] = useState(null)
     const [categories, setCategories] = useState([])
-    const { push } = useHistory()
+    const { 
+        push,
+        location: {
+            state: {product}
+        }     
+    } = useHistory()
     
     const schema = Yup.object().shape({
         name: Yup.string().required('Nome do Produto é obrigatório'),
         price: Yup.string().required('Preço do Produto é obrigatório'),
-        file: Yup.mixed()
-            .test( 
-                'required', 
-                'Obrigatório carregar uma imagem para o produto',
-                value => {
-                    return value?.length > 0
-                }) //Validação para verificar se há imagem carregada
-                .test( 
-                    'fileSize', 
-                    'Tamanho máximo permitido de até 2MB',
-                    value => {
-                        return value[0]?.size <= 200000
-                    }) //Validação para verificar se o tamanho da imagem excede 2MB
-                    .test( 
-                        'type', 
-                        'Suportados somente formatos jpeg e png',
-                        value => {
-                            return (
-                            (value[0]?.type === 'image/jpeg') ||
-                            (value[0]?.type === 'image/png')
-                            )
-                        }) //Validação para verificar se a imagem carregada está nos formatos permitidos.
-                    ,
-        category: Yup.object().required('Categoria do Produto é obrigatória')
+        category: Yup.object().required('Categoria do Produto é obrigatória'),
+        offer: Yup.bool()
     })
 
     const { register, 
@@ -60,11 +51,12 @@ function EditProduct() {
         productDataFormData.append('price', data.price)
         productDataFormData.append('category_id', data.category.id)
         productDataFormData.append('file', data.file[0]) //Definidas as nossas informações em forma de FormData
+        productDataFormData.append('offer', data.offer)
 
-        await toast.promise( api.post('products', productDataFormData), {
-            pending: 'Criando novo produto...',
-            success: 'Produto criado com sucesso',
-            error: 'Falha ao criar o produto. Tente novamente.'
+        await toast.promise( api.put(`products/${product.id}`, productDataFormData), {
+            pending: 'Efetuando as edições do produto...',
+            success: 'Produto editado com sucesso',
+            error: 'Falha ao editar o produto. Tente novamente.'
         })
         
         setTimeout(() =>{
@@ -86,13 +78,17 @@ function EditProduct() {
             <form noValidate onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <Label>Nome</Label>
-                    <Input type='text' {...register('name')}/>
+                    <Input type='text' {...register('name')}
+                    defaultValue={product.name}
+                    />
                     <ErrorMessage>{errors.name?.message}</ErrorMessage>
                 </div>
 
                 <div>
                     <Label>Preço de Venda</Label>
-                    <Input type='number' {...register('price')}/>
+                    <Input type='number' {...register('price')}
+                    defaultValue={product.price}
+                    />
                     <ErrorMessage>{errors.price?.message}</ErrorMessage>
                 </div>
 
@@ -120,6 +116,7 @@ function EditProduct() {
                     <Controller 
                     name='category' 
                     control={control}
+                    defaultValue={product.category}
                     render={({ field}) => {
                         return(
                             <ReactSelect
@@ -128,6 +125,7 @@ function EditProduct() {
                                 getOptionLabel={cat => cat.name}
                                 getOptionValue={cat => cat.id}
                                 placeholder='Selecione a Categoria'
+                                defaultValue={product.category}
                             />
                         )
                     }}
@@ -135,10 +133,19 @@ function EditProduct() {
                     <ErrorMessage>{errors.category?.message}</ErrorMessage>
                 </div>
 
-                <ButtonStyles>Adicionar Produto</ButtonStyles>
+                <ContainerInput>
+                    <input 
+                        type='checkbox' 
+                        {...register('offer')} 
+                        defaultChecked={product.offer}
+                    />
+                    <Label>Produto em Oferta?</Label>
+                </ContainerInput>
+
+                <ButtonStyles>Editar Produto</ButtonStyles>
            </form>
         </Container>
     )
 }
 
-export default EditProduct
+export default NewProduct
