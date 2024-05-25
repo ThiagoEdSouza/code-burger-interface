@@ -3,5 +3,6 @@ module.exports = {
   semi: false,
   arrowParens: 'avoid',
   trailingComma: 'none',
-  backticks/crase: true
+  backticks: true,
+  crase: true
 }
